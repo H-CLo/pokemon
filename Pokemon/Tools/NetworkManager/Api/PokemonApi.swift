@@ -13,6 +13,12 @@ class PokemonApi: NetworkManager {
 }
 
 extension PokemonApi {
+
+    /// Request pokemon list api
+    /// - Parameters:
+    ///   - offset: list start offset
+    ///   - limit: list count
+    ///   - completion: (Result<PokemonList, Error>) -> Void
     func requestList(offset: Int = 0,
                      limit: Int = 20,
                      completion: @escaping (Result<PokemonList, Error>) -> Void)
@@ -28,6 +34,10 @@ extension PokemonApi {
                 })
     }
 
+    /// Request pokemon detail information
+    /// - Parameters:
+    ///   - id: pokemon index ID
+    ///   - completion: (Result<PokemonDetail, Error>) -> Void
     func requestDetail(id: String,
                        completion: @escaping (Result<PokemonDetail, Error>) -> Void)
     {

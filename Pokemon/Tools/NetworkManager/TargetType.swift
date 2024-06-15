@@ -7,11 +7,13 @@
 
 import Foundation
 
+/// HTTP method
 enum HTTPMethodType: String {
     case get = "GET"
     case post = "POST"
 }
 
+/// Define http request parameters
 protocol TargetType {
     /// The target's base `URL`.
     var baseURL: String { get }

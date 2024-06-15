@@ -15,21 +15,38 @@ enum HTTPResponseError: Error {
     case decodeFail(error: String)
 }
 
+/// Define http client request function protocol
 protocol HttpClientProtocol {
     typealias ResponseHandler<Response: Decodable> = (Result<Response, Error>) -> Void
     static func get<T: TargetType, Response: Decodable>(target: T, completion: @escaping ResponseHandler<Response>)
     static func post<T: TargetType, Body: Encodable, Response: Decodable>(target: T, body: Body, completion: @escaping ResponseHandler<Response>)
 }
 
+/// Http request function definition
 class HttpClient: HttpClientProtocol {
+
+    /// Http get request
+    /// - Parameters:
+    ///   - target: TargetType http request parameters
+    ///   - completion: (Result<Response, Error>) -> Void
     static func get<T, Response>(target: T, completion: @escaping ResponseHandler<Response>) where T: TargetType, Response: Decodable {
         request(target: target, body: EmptyParameter(), completion: completion)
     }
 
+    /// Http post request
+    /// - Parameters:
+    ///   - target: TargetType http request parameters
+    ///   - body: Http request body
+    ///   - completion: (Result<Response, Error>) -> Void
     static func post<T, Body, Response>(target: T, body: Body, completion: @escaping ResponseHandler<Response>) where T: TargetType, Body: Encodable, Response: Decodable {
         request(target: target, body: body, completion: completion)
     }
 
+    /// Private function to implement http request with Alamofire framewrok
+    /// - Parameters:
+    ///   - target: TargetType http request parameters
+    ///   - body: Http request body
+    ///   - completion: (Result<Response, Error>) -> Void
     private static func request<T: TargetType, Body: Encodable, Response: Decodable>(target: T, body: Body, completion: @escaping (Result<Response, Error>) -> Void) {
         let urlStr = target.baseURL + target.path
         let method = HTTPMethod(rawValue: target.method.rawValue)
