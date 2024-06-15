@@ -8,7 +8,7 @@
 import Foundation
 
 class PokemonApi: NetworkManager {
-    typealias ResponseHandler<T: Decodable> = Result<T?, Error>
+    typealias ResponseHandler<Response: Decodable> = Result<Response, Error>
     static let shared = PokemonApi()
 }
 
@@ -21,7 +21,7 @@ extension PokemonApi {
                 completion: { (result: ResponseHandler<PokemonList>) in
                     switch result {
                     case let .success(model):
-                        completion(.success(model ?? PokemonList(count: 0, next: "", previous: "", results: [])))
+                        completion(.success(model))
                     case let .failure(error):
                         completion(.failure(error))
                     }
@@ -35,7 +35,7 @@ extension PokemonApi {
                 completion: { (result: ResponseHandler<PokemonDetail>) in
                     switch result {
                     case let .success(model):
-                        completion(.success(model ?? PokemonDetail()))
+                        completion(.success(model))
                     case let .failure(error):
                         completion(.failure(error))
                     }

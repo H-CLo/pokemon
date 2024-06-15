@@ -7,4 +7,23 @@
 
 import Foundation
 
-struct PokemonDetail: Codable {}
+struct PokemonDetail: Codable {
+    let species: PokemonDetailSpecies
+    let types: [PokemonDetailType]
+}
+
+struct PokemonDetailType: Codable {
+
+    struct TypeModel: Codable {
+        let name: String
+        let url: String
+    }
+
+    let slot: Int
+    let type: TypeModel
+}
+
+struct PokemonDetailSpecies: Codable {
+    let name: String
+    let url: String
+}

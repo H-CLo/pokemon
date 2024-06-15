@@ -43,9 +43,9 @@ extension Target: TargetType {
 
     var path: String {
         switch self {
-        case .pokemonList(let offset, let limit):
+        case let .pokemonList(offset, limit):
             return "api/v2/pokemon?offset=\(offset)&limit=\(limit)"
-        case .pokemonDetail(let id):
+        case let .pokemonDetail(id):
             return "api/v2/pokemon/\(id)"
         }
     }

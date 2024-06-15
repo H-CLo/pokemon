@@ -40,6 +40,7 @@ final class PokemonApiUnitTest: XCTestCase {
             case .success(let model):
                 XCTAssert(model.count > 0)
                 XCTAssert(model.results.count > 0)
+                debugPrint("Models = \(model.results)")
             case .failure(let error):
                 XCTFail("Error = \(error.localizedDescription)")
             }
@@ -51,6 +52,14 @@ final class PokemonApiUnitTest: XCTestCase {
     func test_pokemonDetail() {
         let expec = XCTestExpectation(description: "test_pokemonDetail")
         PokemonApi.shared.requestDetail(id: "1", completion: { result in
+            switch result {
+            case .success(let model):
+                XCTAssert(model.species.name.count > 0)
+                XCTAssert(model.types.count > 0)
+                debugPrint("Models = \(model)")
+            case .failure(let error):
+                XCTFail("Error = \(error.localizedDescription)")
+            }
             expec.fulfill()
         })
         self.wait(for: [expec], timeout: 5)
