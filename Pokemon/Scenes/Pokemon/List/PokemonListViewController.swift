@@ -149,4 +149,10 @@ extension PokemonListViewController: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegate
 
-extension PokemonListViewController: UICollectionViewDelegate {}
+extension PokemonListViewController: UICollectionViewDelegate {
+    // Using willDisplay to detect load more mechanism
+    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        guard viewModel.canLoadMore(index: indexPath.row) else { return }
+        viewModel.fetchMorePokemonList()
+    }
+}

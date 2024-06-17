@@ -71,7 +71,7 @@ class HttpClient: HttpClientProtocol {
                           do {
                               if let data = response.data {
                                   if let prettyJSON = data.prettyPrintedJSONString {
-                                      debugPrint("prettyJSON = \(prettyJSON)")
+                                      // debugPrint("prettyJSON = \(prettyJSON)")
                                   }
                                   let model = try JSONDecoder().decode(Response.self, from: data)
                                   completion(.success(model))

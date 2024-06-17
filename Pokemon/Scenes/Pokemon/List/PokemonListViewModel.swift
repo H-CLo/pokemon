@@ -15,9 +15,9 @@ class PokemonListViewModel: BaseViewModel {
     var pokemonDetails = [String: PokemonDetail]()
 
     var offSet = 0
-    let limit = 50
+    let itemPerBatch = 50
     var isFetchingMore = false
-    var isMorePokemons = true
+    var reachEndOfItems = false
 
     // Binding
 
@@ -62,31 +62,36 @@ extension PokemonListViewModel {
 
 extension PokemonListViewModel {
     func fetchPokemonList(completion: (() -> Void)? = nil) {
-        apiManager.requestList(offset: offSet, limit: limit) { [weak self] result in
+        apiManager.requestList(offset: offSet, limit: itemPerBatch) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case let .success(model):
-                self.offSet += self.limit
+                self.offSet += self.itemPerBatch
                 self.pokemonList = model
                 self.pokemons.append(contentsOf: model.results)
                 self.pokemons.sort { Int($0.id) ?? 0 < Int($1.id) ?? 0 }
                 pokemonsBlock.send(self.pokemons)
                 self.fetchPokemonDetails(model.results)
+                completion?()
             case .failure(_):
                 break
             }
         }
     }
 
+    func canLoadMore(index: Int) -> Bool {
+        guard !reachEndOfItems else { return false }
+        guard !isFetchingMore else { return false }
+        return index >= pokemons.count - 5
+    }
+
     func fetchMorePokemonList() {
-        guard isMorePokemons else { return }
-        guard !isFetchingMore else { return }
         isFetchingMore = true
         fetchPokemonList {[weak self] in
             guard let self = self else { return }
             self.isFetchingMore = false
             // Check limitation
-            self.isMorePokemons = self.pokemons.count >= self.pokemonList.count
+            self.reachEndOfItems = self.pokemons.count >= self.pokemonList.count
         }
     }
 
