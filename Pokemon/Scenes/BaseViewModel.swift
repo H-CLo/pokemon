@@ -10,7 +10,7 @@ import Foundation
 class BaseViewModel {
     var isLoading: (() -> Void)?
 
-    let apiManager: NetworkManager
+    let apiManager: PokemonApi
     let favoriteManager: FavoriteManager
 
     init() {

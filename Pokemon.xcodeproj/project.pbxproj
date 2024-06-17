@@ -35,6 +35,7 @@
 		078115B42C1E231200A606B7 /* PokemonListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078115B32C1E231200A606B7 /* PokemonListCollectionViewCell.swift */; };
 		078115B62C1E255700A606B7 /* PokemonBaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078115B52C1E255700A606B7 /* PokemonBaseCollectionViewCell.swift */; };
 		078115B82C1EC44600A606B7 /* PokemonListLayoutType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 078115B72C1EC44600A606B7 /* PokemonListLayoutType.swift */; };
+		07D588E32C2086750057B4F2 /* Collection+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D588E22C2086750057B4F2 /* Collection+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +85,7 @@
 		078115B32C1E231200A606B7 /* PokemonListCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonListCollectionViewCell.swift; sourceTree = "<group>"; };
 		078115B52C1E255700A606B7 /* PokemonBaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonBaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		078115B72C1EC44600A606B7 /* PokemonListLayoutType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokemonListLayoutType.swift; sourceTree = "<group>"; };
+		07D588E22C2086750057B4F2 /* Collection+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -225,6 +227,7 @@
 			isa = PBXGroup;
 			children = (
 				0781158B2C1C5D9A00A606B7 /* Data+.swift */,
+				07D588E22C2086750057B4F2 /* Collection+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				0781157F2C1C3B3700A606B7 /* NetworkManager.swift in Sources */,
 				078115B42C1E231200A606B7 /* PokemonListCollectionViewCell.swift in Sources */,
 				078115B22C1E230400A606B7 /* PokemonGridCollectionViewCell.swift in Sources */,
+				07D588E32C2086750057B4F2 /* Collection+.swift in Sources */,
 				078115B82C1EC44600A606B7 /* PokemonListLayoutType.swift in Sources */,
 				078115962C1D7E5000A606B7 /* PokemonList.swift in Sources */,
 				0781154A2C1C322A00A606B7 /* AppDelegate.swift in Sources */,

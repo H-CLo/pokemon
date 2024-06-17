@@ -54,6 +54,7 @@ final class PokemonApiUnitTest: XCTestCase {
         PokemonApi.shared.requestDetail(id: "1", completion: { result in
             switch result {
             case .success(let model):
+                XCTAssert(model.sprites.front_default.count > 0)
                 XCTAssert(model.species.name.count > 0)
                 XCTAssert(model.types.count > 0)
                 debugPrint("Models = \(model)")

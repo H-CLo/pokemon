@@ -45,13 +45,17 @@ class PokemonListViewController: BaseViewController<PokemonListViewModel> {
         return layout
     }()
 
+    deinit {
+        subscriptions.removeAll()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setNavigationTitle("PokemonList")
         setRightNavigationBarItems([.showFavorites, .changeLayout])
         setupUI()
         bindViewModel()
-        collectionView.reloadData()
+        viewModel.fetchPokemonList()
     }
 
     override func navigationItemDidPressed(_ type: BaseViewController<PokemonListViewModel>.NavigationItemType) {
@@ -84,6 +88,17 @@ private extension PokemonListViewController {
         viewModel.layoutTypeBlock.sink { [weak self] type in
             self?.startInteractiveTransition(type)
         }.store(in: &subscriptions)
+
+        viewModel.pokemonsBlock.sink { [weak self] _ in
+            self?.collectionView.reloadData()
+        }.store(in: &subscriptions)
+
+        viewModel.pokemonDetailBlock.sink { [weak self] id, detail in
+            guard let self = self else { return }
+            guard let index = viewModel.getPokemonIndex(byID: id) else { return }
+            let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0))
+            (cell as? PokemonBaseCollectionViewCell)?.configCell(detail: detail)
+        }.store(in: &subscriptions)
     }
 
     func startInteractiveTransition(_ type: PokemonListLayoutType) {
@@ -104,18 +119,29 @@ private extension PokemonListViewController {
 
 extension PokemonListViewController: UICollectionViewDataSource {
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 50
+        return viewModel.pokemons.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let pokemon = viewModel.getSequencePokemon(indexPath.row)
+        let detail = viewModel.getSequencePokemonDetail(indexPath.row)
+        let cell = getCell(collectionView: collectionView, indexPath: indexPath)
+        if let pokemon = pokemon {
+            cell.configCell(item: pokemon)
+        }
+        if let detail = detail {
+            cell.configCell(detail: detail)
+        }
+        return cell
+    }
+
+    private func getCell(collectionView: UICollectionView, indexPath: IndexPath) -> PokemonBaseCollectionViewCell {
         switch viewModel.layoutType {
         case .grid:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: PokemonGridCollectionViewCell.self), for: indexPath) as? PokemonGridCollectionViewCell else { return UICollectionViewCell() }
-            cell.configCell(item: Pokemon(name: "Test", url: ""))
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: PokemonGridCollectionViewCell.self), for: indexPath) as? PokemonGridCollectionViewCell else { return PokemonBaseCollectionViewCell() }
             return cell
         case .list:
-            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: PokemonListCollectionViewCell.self), for: indexPath) as? PokemonListCollectionViewCell else { return UICollectionViewCell() }
-            cell.configCell(item: Pokemon(name: "Test", url: ""))
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: String(describing: PokemonListCollectionViewCell.self), for: indexPath) as? PokemonListCollectionViewCell else { return PokemonBaseCollectionViewCell() }
             return cell
         }
     }

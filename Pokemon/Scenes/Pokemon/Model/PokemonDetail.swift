@@ -8,6 +8,7 @@
 import Foundation
 
 struct PokemonDetail: Codable {
+    let sprites: PokemonDetailSprites
     let species: PokemonDetailSpecies
     let types: [PokemonDetailType]
 }
@@ -26,4 +27,8 @@ struct PokemonDetailType: Codable {
 struct PokemonDetailSpecies: Codable {
     let name: String
     let url: String
+}
+
+struct PokemonDetailSprites: Codable {
+    let front_default: String
 }
