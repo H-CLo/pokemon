@@ -10,28 +10,38 @@ import Foundation
 
 class PokemonListViewModel: BaseViewModel {
     var layoutType: PokemonListLayoutType = .grid
-    var pokemonList = PokemonList(count: 0, next: "", previous: "", results: [])
-    var pokemons = [Pokemon]()
-    var pokemonDetails = [String: PokemonDetail]()
+    private var pokemonList = PokemonList(count: 0, next: "", previous: "", results: [])
+    private var pokemons = [Pokemon]()
+    private var displayPokemons: [Pokemon] { showFavorites ? favoritePokemons : pokemons }
+    private var pokemonDetails = [String: PokemonDetail]()
 
-    var offSet = 0
-    let itemPerBatch = 50
-    var isFetchingMore = false
-    var reachEndOfItems = false
+    // Favorite
+    private var showFavorites: Bool = false
+    private var favoritePokemons = [Pokemon]()
+
+    // Load more
+    private var offSet = 0
+    private let itemPerBatch = 50
+    private var isFetchingMore = false
+    private var reachEndOfItems = false
 
     // Binding
 
     var layoutTypeBlock = PassthroughSubject<PokemonListLayoutType, Never>()
     var pokemonsBlock = PassthroughSubject<[Pokemon], Never>()
     var pokemonDetailBlock = PassthroughSubject<(String, PokemonDetail), Never>()
+    var showFavoriteBlock = PassthroughSubject<String, Never>()
 }
 
 // MARK: - TableView
 
 extension PokemonListViewModel {
+    func getSequenceCount() -> Int {
+        return displayPokemons.count
+    }
 
     func getSequencePokemon(_ index: Int) -> Pokemon? {
-        return pokemons[safe: index]
+        return displayPokemons[safe: index]
     }
 
     func getSequencePokemonDetail(_ index: Int) -> PokemonDetail? {
@@ -39,7 +49,7 @@ extension PokemonListViewModel {
     }
 
     func getPokemonIndex(byID id: String) -> Int? {
-        return pokemons.firstIndex { $0.id == id}
+        return displayPokemons.firstIndex { $0.id == id }
     }
 }
 
@@ -58,6 +68,17 @@ extension PokemonListViewModel {
     }
 }
 
+// MARK: - Favorite
+
+extension PokemonListViewModel {
+    func showFavoritesPressed() {
+        showFavorites = !showFavorites
+        favoritePokemons = Array(favoriteManager.fetchFavorites())
+        favoritePokemons.sort { Int($0.id) ?? 0 < Int($1.id) ?? 0 }
+        showFavoriteBlock.send("")
+    }
+}
+
 // MARK: - Api call
 
 extension PokemonListViewModel {
@@ -73,7 +94,7 @@ extension PokemonListViewModel {
                 pokemonsBlock.send(self.pokemons)
                 self.fetchPokemonDetails(model.results)
                 completion?()
-            case .failure(_):
+            case .failure:
                 break
             }
         }
@@ -82,12 +103,13 @@ extension PokemonListViewModel {
     func canLoadMore(index: Int) -> Bool {
         guard !reachEndOfItems else { return false }
         guard !isFetchingMore else { return false }
+        guard !showFavorites else { return false }
         return index >= pokemons.count - 5
     }
 
     func fetchMorePokemonList() {
         isFetchingMore = true
-        fetchPokemonList {[weak self] in
+        fetchPokemonList { [weak self] in
             guard let self = self else { return }
             self.isFetchingMore = false
             // Check limitation
@@ -97,17 +119,16 @@ extension PokemonListViewModel {
 
     func fetchPokemonDetails(_ items: [Pokemon]) {
         for item in items {
-            apiManager.requestDetail(id: item.id) {[weak self] result in
+            apiManager.requestDetail(id: item.id) { [weak self] result in
                 guard let self = self else { return }
                 switch result {
-                case .success(let model):
+                case let .success(model):
                     self.pokemonDetails[item.id] = model
                     self.pokemonDetailBlock.send((item.id, model))
-                case .failure(_):
+                case .failure:
                     break
                 }
             }
-
         }
     }
 }

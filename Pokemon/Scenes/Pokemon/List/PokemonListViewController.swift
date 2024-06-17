@@ -63,7 +63,7 @@ class PokemonListViewController: BaseViewController<PokemonListViewModel> {
 
         switch type {
         case .showFavorites:
-            break
+            viewModel.showFavoritesPressed()
         case .changeLayout:
             viewModel.exchangeGridListLayout()
         }
@@ -99,6 +99,10 @@ private extension PokemonListViewController {
             let cell = self.collectionView.cellForItem(at: IndexPath(row: index, section: 0))
             (cell as? PokemonBaseCollectionViewCell)?.configCell(detail: detail)
         }.store(in: &subscriptions)
+
+        viewModel.showFavoriteBlock.sink {[weak self] _ in
+            self?.collectionView.reloadData()
+        }.store(in: &subscriptions)
     }
 
     func startInteractiveTransition(_ type: PokemonListLayoutType) {
@@ -119,7 +123,7 @@ private extension PokemonListViewController {
 
 extension PokemonListViewController: UICollectionViewDataSource {
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return viewModel.pokemons.count
+        return viewModel.getSequenceCount()
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
