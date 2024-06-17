@@ -21,7 +21,7 @@ class PokemonGridCollectionViewCell: PokemonBaseCollectionViewCell {
 
     override func configCell(item: Pokemon) {
         super.configCell(item: item)
-        contentView.backgroundColor = .systemBlue
+        contentView.backgroundColor = .lightGray
     }
 }
 
@@ -31,27 +31,35 @@ private extension PokemonGridCollectionViewCell {
         contentView.addSubview(nameLabel)
         contentView.addSubview(typesLabel)
         contentView.addSubview(thumbnailImageView)
+        contentView.addSubview(favoriteButton)
 
         idLabel.snp.makeConstraints {
-            $0.top.width.centerX.equalToSuperview()
-            $0.height.equalTo(15)
+            $0.top.leading.equalToSuperview()
+            $0.height.equalTo(20)
+            $0.trailing.equalTo(favoriteButton.snp.leading)
         }
 
         nameLabel.snp.makeConstraints {
             $0.top.equalTo(idLabel.snp.bottom)
-            $0.width.centerX.equalToSuperview()
-            $0.height.equalTo(15)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(20)
+            $0.trailing.equalTo(favoriteButton.snp.leading)
         }
 
         typesLabel.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom)
-            $0.width.centerX.equalToSuperview()
-            $0.height.equalTo(15)
+            $0.leading.equalToSuperview()
+            $0.height.equalTo(20)
         }
 
         thumbnailImageView.snp.makeConstraints {
             $0.top.equalTo(typesLabel.snp.bottom)
             $0.width.centerX.bottom.equalToSuperview()
+        }
+
+        favoriteButton.snp.makeConstraints {
+            $0.size.equalTo(40)
+            $0.top.trailing.equalToSuperview()
         }
     }
 }
