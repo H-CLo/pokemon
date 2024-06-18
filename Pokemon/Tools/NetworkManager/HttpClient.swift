@@ -24,6 +24,16 @@ protocol HttpClientProtocol {
 
 /// Http request function definition
 class HttpClient: HttpClientProtocol {
+    static let sessionManager: Session = {
+        let memoryCapacity = 500 * 1024 * 1024
+        let diskCapacity = 500 * 1024 * 1024
+        let cache = URLCache(memoryCapacity: memoryCapacity, diskCapacity: diskCapacity)
+        let configuration = URLSessionConfiguration.default
+        configuration.requestCachePolicy = .useProtocolCachePolicy
+        configuration.urlCache = cache
+        let session = Session(configuration: configuration)
+        return session
+    }()
 
     /// Http get request
     /// - Parameters:
@@ -56,10 +66,10 @@ class HttpClient: HttpClientProtocol {
         debugPrint("Method = \(method)")
         debugPrint("Headers = \(headers)")
 
-        AF.request(urlStr,
-                   method: method,
-                   parameters: body,
-                   headers: headers)
+        sessionManager.request(urlStr,
+                               method: method,
+                               parameters: body,
+                               headers: headers)
             .response(queue: .main,
                       completionHandler: { response in
                           if let error = response.error {
