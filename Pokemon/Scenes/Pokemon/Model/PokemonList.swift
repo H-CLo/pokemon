@@ -13,9 +13,9 @@ struct Pokemon: Codable, Hashable {
     let url: String
 
     init(name: String, url: String) {
-        self.id = ""
         self.name = name
         self.url = url
+        self.id = URL(string: url)?.lastPathComponent ?? ""
     }
 
     init(from decoder: any Decoder) throws {

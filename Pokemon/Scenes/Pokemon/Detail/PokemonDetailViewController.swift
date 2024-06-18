@@ -39,6 +39,8 @@ class PokemonDetailViewController: BaseViewController<PokemonDetailViewModel> {
         return label
     }()
 
+    let favoriteButton = FavoriteButton()
+
     deinit {
         subscriptions.removeAll()
     }
@@ -60,6 +62,7 @@ extension PokemonDetailViewController {
             self?.nameLabel.text = "Name: \(model.name)"
             self?.typesLabel.text = "Types: \(model.types.map { $0.type.name }.joined(separator: ", "))"
             self?.thumbnailImageView.sd_setImage(with: URL(string: model.sprites.front_default))
+            self?.setupFavoriteItem(model: model)
         }.store(in: &subscriptions)
 
         viewModel.flavorTextBlock.sink { [weak self] text in
@@ -82,6 +85,12 @@ extension PokemonDetailViewController {
             }
         }
     }
+
+    func setupFavoriteItem(model: PokemonDetail) {
+        let target = Target.pokemonDetail(id: model.id.description)
+        let pokemon = Pokemon(name: model.name, url: target.baseURL+target.path+"/")
+        favoriteButton.setFavoriteItem(pokemon: pokemon)
+    }
 }
 
 extension PokemonDetailViewController {
@@ -94,6 +103,7 @@ extension PokemonDetailViewController {
         scrollView.addSubview(evolutionLabel)
         scrollView.addSubview(evolutionStackView)
         scrollView.addSubview(descriptionLabel)
+        scrollView.addSubview(favoriteButton)
 
         scrollView.snp.makeConstraints {
             $0.edges.equalToSuperview()
@@ -138,6 +148,12 @@ extension PokemonDetailViewController {
         descriptionLabel.snp.makeConstraints {
             $0.top.equalTo(evolutionStackView.snp.bottom)
             $0.leading.trailing.equalToSuperview().inset(10)
+        }
+
+        favoriteButton.snp.makeConstraints {
+            $0.top.equalTo(descriptionLabel.snp.bottom)
+            $0.leading.equalToSuperview().inset(10)
+            $0.size.equalTo(45)
         }
     }
 }
