@@ -8,6 +8,8 @@
 import Foundation
 
 struct PokemonDetail: Codable {
+    let id: Int
+    let name: String
     let sprites: PokemonDetailSprites
     let species: PokemonDetailSpecies
     let types: [PokemonDetailType]

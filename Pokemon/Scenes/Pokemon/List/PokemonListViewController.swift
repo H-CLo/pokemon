@@ -159,4 +159,10 @@ extension PokemonListViewController: UICollectionViewDelegate {
         guard viewModel.canLoadMore(index: indexPath.row) else { return }
         viewModel.fetchMorePokemonList()
     }
+
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let pokemon = viewModel.getSequencePokemon(indexPath.row)
+        let viewController = PokemonDetailViewController(viewModel: PokemonDetailViewModel(id: pokemon?.id ?? ""))
+        self.navigationController?.pushViewController(viewController, animated: true)
+    }
 }

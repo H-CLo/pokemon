@@ -13,7 +13,6 @@ class PokemonApi: NetworkManager {
 }
 
 extension PokemonApi {
-
     /// Request pokemon list api
     /// - Parameters:
     ///   - offset: list start offset
@@ -43,6 +42,20 @@ extension PokemonApi {
     {
         request(target: Target.pokemonDetail(id: id),
                 completion: { (result: ResponseHandler<PokemonDetail>) in
+                    switch result {
+                    case let .success(model):
+                        completion(.success(model))
+                    case let .failure(error):
+                        completion(.failure(error))
+                    }
+                })
+    }
+
+    func request<Response: Decodable>(customURL: String,
+                                      completion: @escaping (Result<Response, Error>) -> Void)
+    {
+        request(target: Target.custom(urlStr: customURL),
+                completion: { (result: ResponseHandler<Response>) in
                     switch result {
                     case let .success(model):
                         completion(.success(model))
