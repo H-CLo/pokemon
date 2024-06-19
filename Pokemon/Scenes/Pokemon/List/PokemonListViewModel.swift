@@ -132,3 +132,28 @@ extension PokemonListViewModel {
         }
     }
 }
+
+// MARK: - UnitTest
+
+extension PokemonListViewModel {
+
+    func unitTest_setPokemons(_ pokemons: [Pokemon]) {
+        self.pokemons = pokemons
+    }
+
+    func unitTest_setPokemonDetails(_ pokemonDetails: [String: PokemonDetail]) {
+        self.pokemonDetails = pokemonDetails
+    }
+
+    func unitTest_setParameter(reachEndOfItems: Bool) {
+        self.reachEndOfItems = reachEndOfItems
+    }
+
+    func unitTest_setParameter(isFetchingMore: Bool) {
+        self.isFetchingMore = isFetchingMore
+    }
+
+    func unitTest_setParameter(showFavorites: Bool) {
+        self.showFavorites = showFavorites
+    }
+}
