@@ -78,15 +78,23 @@ extension PokemonDetailViewModel {
     }
 
     func sendEvolutions(from: PokemonEvolutionChain) {
-        let species = [from.chain.species] + getSpecies(evolution: from.chain.evolves_to.first)
+        let species = getSpecies(chain: from.chain)
         evolutionBlock.send(species)
     }
 
-    // Recursive get evolution species
     func getSpecies(evolution: PokemonEvolutionChain.EvolvesTo?) -> [PokemonEvolutionChain.Species] {
         guard let evolution = evolution else { return [] }
         var result = [evolution.species]
         result.append(contentsOf: getSpecies(evolution: evolution.evolves_to.first))
+        return result
+    }
+
+    // Recursive get evolution species
+    func getSpecies(chain: PokemonEvolutionChain.Chain) -> [PokemonEvolutionChain.Species] {
+        var result = [chain.species]
+        if let first = chain.evolves_to.first {
+            result += getSpecies(chain: first)
+        }
         return result
     }
 }

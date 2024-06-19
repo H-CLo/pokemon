@@ -11,11 +11,13 @@ import XCTest
 final class FavoriteManagerUnitTest: XCTestCase {
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+        // Clear up
+        FavoriteManager.shared.removeAll()
     }
 
     override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+        // Clear up
+        FavoriteManager.shared.removeAll()
     }
 
     func test_addFavorite() {
@@ -26,9 +28,6 @@ final class FavoriteManagerUnitTest: XCTestCase {
         let items = [pokemon1, pokemon2, pokemon3, pokemon4]
         FavoriteManager.shared.addFavorites(items)
         XCTAssert(items.count == FavoriteManager.shared.fetchFavorites().count)
-
-        // Clear
-        FavoriteManager.shared.removeAll()
     }
 
     func test_removeFavorite() {
@@ -42,9 +41,6 @@ final class FavoriteManagerUnitTest: XCTestCase {
         let favorites = FavoriteManager.shared.fetchFavorites()
         XCTAssert(favorites.count == 3)
         XCTAssertFalse(favorites.contains(pokemon1))
-
-        // Clear
-        FavoriteManager.shared.removeAll()
     }
 
     func test_hasFavorite() {
@@ -59,8 +55,5 @@ final class FavoriteManagerUnitTest: XCTestCase {
         XCTAssert(FavoriteManager.shared.hasFavorite(pokemon2))
         XCTAssert(FavoriteManager.shared.hasFavorite(pokemon4))
         XCTAssertFalse(FavoriteManager.shared.hasFavorite(pokemon5))
-
-        // Clear
-        FavoriteManager.shared.removeAll()
     }
 }

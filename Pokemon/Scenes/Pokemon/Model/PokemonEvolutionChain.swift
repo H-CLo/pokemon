@@ -23,7 +23,7 @@ struct PokemonEvolutionChain: Codable {
     struct Chain: Codable {
         let species: Species
         let is_baby: Bool
-        let evolves_to: [EvolvesTo]
+        let evolves_to: [Chain]
     }
 
     let chain: Chain
