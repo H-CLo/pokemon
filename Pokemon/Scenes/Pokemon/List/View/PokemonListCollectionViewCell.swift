@@ -46,7 +46,6 @@ private extension PokemonListCollectionViewCell {
         typesLabel.snp.makeConstraints {
             $0.top.equalTo(nameLabel.snp.bottom)
             $0.leading.equalToSuperview().inset(10)
-            $0.height.equalTo(30)
             $0.bottom.equalToSuperview()
         }
 

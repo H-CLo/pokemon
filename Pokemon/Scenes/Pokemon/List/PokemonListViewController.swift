@@ -28,9 +28,7 @@ class PokemonListViewController: BaseViewController<PokemonListViewModel> {
 
     let gridLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        let halfSceenWidth = UIScreen.main.bounds.width / 2
+        let halfSceenWidth = UIScreen.main.bounds.width / 2 - 10
         layout.itemSize = CGSize(width: halfSceenWidth, height: halfSceenWidth)
         layout.scrollDirection = .vertical
         return layout
@@ -38,8 +36,7 @@ class PokemonListViewController: BaseViewController<PokemonListViewModel> {
 
     let listLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
+        layout.minimumInteritemSpacing = 10
         layout.itemSize = CGSize(width: UIScreen.main.bounds.width, height: 90)
         layout.scrollDirection = .vertical
         return layout
@@ -106,16 +103,9 @@ private extension PokemonListViewController {
     }
 
     func startInteractiveTransition(_ type: PokemonListLayoutType) {
-        switch type {
-        case .grid:
-            collectionView.startInteractiveTransition(to: listLayout)
-            collectionView.finishInteractiveTransition()
-            collectionView.reloadData()
-        case .list:
-            collectionView.startInteractiveTransition(to: gridLayout)
-            collectionView.finishInteractiveTransition()
-            collectionView.reloadData()
-        }
+        let layout = (type == .grid) ? gridLayout : listLayout
+        collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+        collectionView.setCollectionViewLayout(layout, animated: true)
     }
 }
 
