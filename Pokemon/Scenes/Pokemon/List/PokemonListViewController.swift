@@ -9,10 +9,15 @@ import Combine
 import SnapKit
 import UIKit
 
+protocol PokemonListViewControllerProtocol: AnyObject {
+    func pushToDetailView(id: String)
+}
+
 class PokemonListViewController: BaseViewController<PokemonListViewModel> {
     // MARK: - Property
 
     var subscriptions = Set<AnyCancellable>()
+    weak var delegate: PokemonListViewControllerProtocol?
 
     // MARK: - UI
 
@@ -152,7 +157,6 @@ extension PokemonListViewController: UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let pokemon = viewModel.getSequencePokemon(indexPath.row)
-        let viewController = PokemonDetailViewController(viewModel: PokemonDetailViewModel(id: pokemon?.id ?? ""))
-        self.navigationController?.pushViewController(viewController, animated: true)
+        delegate?.pushToDetailView(id: pokemon?.id ?? "")
     }
 }

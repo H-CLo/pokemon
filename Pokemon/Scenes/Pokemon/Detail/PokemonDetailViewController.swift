@@ -8,10 +8,15 @@
 import Combine
 import UIKit
 
+protocol PokemonDetailViewProtocol: AnyObject {
+    func pushToDetailView(id: String)
+}
+
 class PokemonDetailViewController: BaseViewController<PokemonDetailViewModel> {
     // MARK: - Property
 
     var subscriptions = Set<AnyCancellable>()
+    weak var delegate: PokemonDetailViewProtocol?
 
     // MARK: - UI
 
@@ -80,8 +85,7 @@ extension PokemonDetailViewController {
             evolutionStackView.addArrangedSubview(view)
             view.setSpecies($0)
             view.detailViewDidPressed = { [weak self] id in
-                let viewController = PokemonDetailViewController(viewModel: PokemonDetailViewModel(id: id))
-                self?.navigationController?.pushViewController(viewController, animated: true)
+                self?.delegate?.pushToDetailView(id: id)
             }
         }
     }
