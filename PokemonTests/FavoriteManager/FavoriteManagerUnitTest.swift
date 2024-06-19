@@ -10,14 +10,16 @@ import XCTest
 
 final class FavoriteManagerUnitTest: XCTestCase {
 
+    let favoriteManager = FavoriteManager()
+
     override func setUpWithError() throws {
         // Clear up
-        FavoriteManager.shared.removeAll()
+        favoriteManager.removeAll()
     }
 
     override func tearDownWithError() throws {
         // Clear up
-        FavoriteManager.shared.removeAll()
+        favoriteManager.removeAll()
     }
 
     func test_addFavorite() {
@@ -26,8 +28,8 @@ final class FavoriteManagerUnitTest: XCTestCase {
         let pokemon3 = Pokemon(name: "Test3", url: "Test3")
         let pokemon4 = Pokemon(name: "Test4", url: "Test4")
         let items = [pokemon1, pokemon2, pokemon3, pokemon4]
-        FavoriteManager.shared.addFavorites(items)
-        XCTAssert(items.count == FavoriteManager.shared.fetchFavorites().count)
+        favoriteManager.addFavorites(items)
+        XCTAssert(items.count == favoriteManager.fetchFavorites().count)
     }
 
     func test_removeFavorite() {
@@ -36,9 +38,9 @@ final class FavoriteManagerUnitTest: XCTestCase {
         let pokemon3 = Pokemon(name: "Test7", url: "Test7")
         let pokemon4 = Pokemon(name: "Test8", url: "Test8")
         let items = [pokemon1, pokemon2, pokemon3, pokemon4]
-        FavoriteManager.shared.addFavorites(items)
-        FavoriteManager.shared.removeFavorite(pokemon1)
-        let favorites = FavoriteManager.shared.fetchFavorites()
+        favoriteManager.addFavorites(items)
+        favoriteManager.removeFavorite(pokemon1)
+        let favorites = favoriteManager.fetchFavorites()
         XCTAssert(favorites.count == 3)
         XCTAssertFalse(favorites.contains(pokemon1))
     }
@@ -50,10 +52,10 @@ final class FavoriteManagerUnitTest: XCTestCase {
         let pokemon4 = Pokemon(name: "Test12", url: "Test12")
         let pokemon5 = Pokemon(name: "Test13", url: "Test13")
         let items = [pokemon1, pokemon2, pokemon3, pokemon4]
-        FavoriteManager.shared.addFavorites(items)
-        XCTAssert(FavoriteManager.shared.hasFavorite(pokemon1))
-        XCTAssert(FavoriteManager.shared.hasFavorite(pokemon2))
-        XCTAssert(FavoriteManager.shared.hasFavorite(pokemon4))
-        XCTAssertFalse(FavoriteManager.shared.hasFavorite(pokemon5))
+        favoriteManager.addFavorites(items)
+        XCTAssert(favoriteManager.hasFavorite(pokemon1))
+        XCTAssert(favoriteManager.hasFavorite(pokemon2))
+        XCTAssert(favoriteManager.hasFavorite(pokemon4))
+        XCTAssertFalse(favoriteManager.hasFavorite(pokemon5))
     }
 }

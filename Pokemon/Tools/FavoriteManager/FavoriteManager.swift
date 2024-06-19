@@ -11,8 +11,6 @@ import Foundation
 class FavoriteManager {
     // MARK: - Property
 
-    static let shared = FavoriteManager()
-
     private let userDefaultKey: String = "FavoriteItems"
     private let userDefault = UserDefaults.standard
     private var favorites: Set<Pokemon> = []

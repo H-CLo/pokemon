@@ -9,15 +9,9 @@ import Foundation
 import UIKit
 
 class PokemonListCoordinator: Coordinator {
-    let navigationController: UINavigationController
-    var childCoordinators: [Coordinator] = []
 
-    init(navigationController: UINavigationController) {
-        self.navigationController = navigationController
-    }
-
-    func start() {
-        let viewModel = PokemonListViewModel()
+    override func start() {
+        let viewModel = PokemonListViewModel(appDependencies: appDependencies)
         let pokemonListViewController = PokemonListViewController(viewModel: viewModel)
         pokemonListViewController.delegate = self
         navigationController.setViewControllers([pokemonListViewController], animated: false)
@@ -26,7 +20,7 @@ class PokemonListCoordinator: Coordinator {
 
 extension PokemonListCoordinator: PokemonListViewControllerProtocol {
     func pushToDetailView(id: String) {
-        let pokemonDetailCoordinator = PokemonDetailCoordinator(navigationController: navigationController, id: id)
+        let pokemonDetailCoordinator = PokemonDetailCoordinator(id: id, navigationController: navigationController, appDependencies: appDependencies)
         add(child: pokemonDetailCoordinator)
         pokemonDetailCoordinator.start()
     }

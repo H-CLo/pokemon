@@ -8,31 +8,46 @@
 import Foundation
 import UIKit
 
-protocol Coordinator: AnyObject {
-    var childCoordinators: [Coordinator] { get set }
+protocol Coordinating: AnyObject {
+    var childCoordinators: [Coordinating] { get set }
     func start()
 }
 
-extension Coordinator {
-    func add(child coordinator: Coordinator) {
+extension Coordinating {
+    func add(child coordinator: Coordinating) {
         guard !childCoordinators.contains(where: { $0 === coordinator }) else { return }
         childCoordinators.append(coordinator)
         debugPrint("childCoordinators = \(childCoordinators)")
     }
 }
 
+class Coordinator: Coordinating {
+    let navigationController: UINavigationController
+    let appDependencies: AppDependencies
+    var childCoordinators = [Coordinating]()
+
+    init(navigationController: UINavigationController, appDependencies: AppDependencies) {
+        self.navigationController = navigationController
+        self.appDependencies = appDependencies
+    }
+
+    func start() {
+        debugPrint("Coordinator Start")
+    }
+}
+
 class AppCoordinator: Coordinator {
     private(set) var window: UIWindow?
-    var childCoordinators: [Coordinator] = []
 
-    init(scene: UIWindowScene) {
+    init(scene: UIWindowScene, navigationController: UINavigationController, appDependencies: AppDependencies) {
         let window = UIWindow(windowScene: scene)
         window.backgroundColor = .white
         self.window = window
         window.makeKeyAndVisible()
+        super.init(navigationController: navigationController, appDependencies: appDependencies)
     }
-
-    func start() {
+    
+    override func start() {
         // Setup RootViewController
         let rootCoodinator = makeCoordinator()
         window?.rootViewController = rootCoodinator.0
@@ -42,9 +57,8 @@ class AppCoordinator: Coordinator {
 }
 
 private extension AppCoordinator {
-    func makeCoordinator() -> (UINavigationController, coordinator: Coordinator) {
-        let navigationController = UINavigationController()
-        let coordinator = PokemonListCoordinator(navigationController: navigationController)
+    func makeCoordinator() -> (UINavigationController, coordinator: Coordinating) {
+        let coordinator = PokemonListCoordinator(navigationController: navigationController, appDependencies: appDependencies)
         navigationController.title = "PokemonList"
         return (navigationController, coordinator)
     }

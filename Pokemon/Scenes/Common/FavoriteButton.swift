@@ -18,7 +18,7 @@ class FavoriteButton: UIButton {
         }
     }
 
-    init(favoriteManager: FavoriteManager = FavoriteManager.shared) {
+    init(favoriteManager: FavoriteManager = FavoriteManager()) {
         self.favoriteManager = favoriteManager
         super.init(frame: .zero)
         setImage(UIImage(named: "unlike"), for: .normal)

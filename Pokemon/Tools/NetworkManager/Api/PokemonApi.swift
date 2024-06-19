@@ -7,12 +7,14 @@
 
 import Foundation
 
-class PokemonApi: NetworkManager {
+protocol PokemonApi {
     typealias ResponseHandler<Response: Decodable> = Result<Response, Error>
-    static let shared = PokemonApi()
+    func requestList(offset: Int, limit: Int, completion: @escaping (Result<PokemonList, Error>) -> Void)
+    func requestDetail(id: String, completion: @escaping (Result<PokemonDetail, Error>) -> Void)
+    func request<Response: Decodable>(customURL: String, completion: @escaping (Result<Response, Error>) -> Void)
 }
 
-extension PokemonApi {
+extension NetworkManager: PokemonApi {
     /// Request pokemon list api
     /// - Parameters:
     ///   - offset: list start offset

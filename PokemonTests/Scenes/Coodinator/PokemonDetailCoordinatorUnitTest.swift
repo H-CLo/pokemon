@@ -19,7 +19,7 @@ final class PokemonDetailCoordinatorUnitTest: XCTestCase {
     }
 
     func test_pushToDetailView() {
-        let coordinator = PokemonListCoordinator(navigationController: UINavigationController())
+        let coordinator = PokemonListCoordinator(navigationController: UINavigationController(), appDependencies: AppDependencies())
         coordinator.start()
         coordinator.pushToDetailView(id: "1")
         XCTAssert(coordinator.childCoordinators.count > 0)

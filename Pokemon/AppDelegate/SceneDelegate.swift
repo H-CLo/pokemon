@@ -17,7 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         // Init view flow with AppCoodinator
-        coordinator = AppCoordinator(scene: windowScene)
+        coordinator = AppCoordinator(scene: windowScene, navigationController: UINavigationController(), appDependencies: AppDependencies())
         coordinator?.start()
     }
 

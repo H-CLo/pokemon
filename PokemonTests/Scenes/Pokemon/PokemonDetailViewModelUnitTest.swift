@@ -20,7 +20,7 @@ final class PokemonDetailViewModelUnitTest: XCTestCase {
     }
 
     func test_sendFlavorText() {
-        let viewModel = PokemonDetailViewModel(id: "1")
+        let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
         let species = PokemonSpecies(evolution_chain: PokemonSpeciesEvolutionChain(url: ""),
                                      flavor_text_entries: [PokemonSpeciesFlavorTextEntry(flavor_text: "Test1",
                                                                                          language: PokemonSpeciesFlavorTextEntry.Language(name: "zh-TW", url: ""),
@@ -42,7 +42,7 @@ final class PokemonDetailViewModelUnitTest: XCTestCase {
     }
 
     func test_sendEvolutions() {
-        let viewModel = PokemonDetailViewModel(id: "1")
+        let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
         let chain3 = PokemonEvolutionChain.Chain(species: PokemonEvolutionChain.Species(name: "3", url: "3"), is_baby: false, evolves_to: [])
         let chain2 = PokemonEvolutionChain.Chain(species: PokemonEvolutionChain.Species(name: "2", url: "2"), is_baby: false, evolves_to: [chain3])
         let chain1 =
@@ -58,7 +58,7 @@ final class PokemonDetailViewModelUnitTest: XCTestCase {
     }
 
     func test_getSpecies() {
-        let viewModel = PokemonDetailViewModel(id: "1")
+        let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
         let mock1 = PokemonEvolutionChain.Chain(species: PokemonEvolutionChain.Species(name: "0", url: "0"), is_baby: false, evolves_to: [])
         let result1 = viewModel.getSpecies(chain: mock1)
         XCTAssert(result1.count == 1)

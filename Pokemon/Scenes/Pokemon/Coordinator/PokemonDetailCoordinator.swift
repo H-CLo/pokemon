@@ -10,16 +10,14 @@ import UIKit
 
 class PokemonDetailCoordinator: Coordinator {
     let id: String
-    let navigationController: UINavigationController
-    var childCoordinators: [Coordinator] = []
 
-    init(navigationController: UINavigationController, id: String) {
-        self.navigationController = navigationController
+    init(id: String, navigationController: UINavigationController, appDependencies: AppDependencies) {
         self.id = id
+        super.init(navigationController: navigationController, appDependencies: appDependencies)
     }
 
-    func start() {
-        let viewModel = PokemonDetailViewModel(id: id)
+    override func start() {
+        let viewModel = PokemonDetailViewModel(id: id, appDependencies: appDependencies)
         let pokemonDetailViewController = PokemonDetailViewController(viewModel: viewModel)
         pokemonDetailViewController.delegate = self
         navigationController.pushViewController(pokemonDetailViewController, animated: true)
@@ -28,7 +26,7 @@ class PokemonDetailCoordinator: Coordinator {
 
 extension PokemonDetailCoordinator: PokemonDetailViewProtocol {
     func pushToDetailView(id: String) {
-        let pokemonDetailCoordinator = PokemonDetailCoordinator(navigationController: navigationController, id: id)
+        let pokemonDetailCoordinator = PokemonDetailCoordinator(id: id, navigationController: navigationController, appDependencies: appDependencies)
         add(child: pokemonDetailCoordinator)
         pokemonDetailCoordinator.start()
     }

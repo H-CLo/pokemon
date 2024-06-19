@@ -24,7 +24,6 @@ final class PokemonListViewModelUnitTest: XCTestCase {
                               "5": PokemonDetail(id: 5, name: "5", sprites: PokemonDetailSprites(front_default: ""), species: PokemonDetailSpecies(name: "", url: ""), types: [])]
 
     override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
     }
 
     override func tearDownWithError() throws {
@@ -34,13 +33,13 @@ final class PokemonListViewModelUnitTest: XCTestCase {
     // MARK: - TableView
 
     func test_getSequenceCount() {
-        let viewModel = PokemonListViewModel()
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
         viewModel.unitTest_setPokemons(mockPokemons)
         XCTAssert(viewModel.getSequenceCount() == 5)
     }
 
     func test_getSequencePokemon() {
-        let viewModel = PokemonListViewModel()
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
         viewModel.unitTest_setPokemons(mockPokemons)
         let pokemon = viewModel.getSequencePokemon(2)
         XCTAssertNotNil(pokemon)
@@ -52,7 +51,7 @@ final class PokemonListViewModelUnitTest: XCTestCase {
     }
 
     func test_getSequencePokemonDetail() {
-        let viewModel = PokemonListViewModel()
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
         viewModel.unitTest_setPokemons(mockPokemons)
         viewModel.unitTest_setPokemonDetails(mockPokemonDetails)
         let detail = viewModel.getSequencePokemonDetail(4)
@@ -64,7 +63,7 @@ final class PokemonListViewModelUnitTest: XCTestCase {
     }
 
     func test_getPokemonIndex() {
-        let viewModel = PokemonListViewModel()
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
         viewModel.unitTest_setPokemons(mockPokemons)
         let index = viewModel.getPokemonIndex(byID: "2")
         XCTAssert(index == 1)
@@ -76,7 +75,7 @@ final class PokemonListViewModelUnitTest: XCTestCase {
     // MARK: - Grid List
 
     func test_exchangeGridListLayout() {
-        let viewModel = PokemonListViewModel()
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
         let expec = XCTestExpectation(description: "test_exchangeGridListLayout")
         let toType = PokemonListLayoutType.list
         viewModel.layoutTypeBlock.sink { type in
@@ -90,12 +89,12 @@ final class PokemonListViewModelUnitTest: XCTestCase {
     // MARK: - Favorite
 
     func test_showFavoritesPressed() {
-        let viewModel = PokemonListViewModel()
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
         // Clear up all pokemons
-        FavoriteManager.shared.removeAll()
+        viewModel.favoriteManager.removeAll()
 
         // Set new favorite pokemons
-        FavoriteManager.shared.addFavorites(mockPokemons)
+        viewModel.favoriteManager.addFavorites(mockPokemons)
 
         // Change favorite list
         viewModel.showFavoritesPressed()
@@ -115,8 +114,8 @@ final class PokemonListViewModelUnitTest: XCTestCase {
     // MARK: - Api
 
     func test_canLoadMore() {
-        let viewModel = PokemonListViewModel()
-        viewModel.unitTest_setPokemons(mockPokemons+mockPokemons)
+        let viewModel = PokemonListViewModel(appDependencies: AppDependencies())
+        viewModel.unitTest_setPokemons(mockPokemons + mockPokemons)
         // Check if load more work
         XCTAssert(viewModel.canLoadMore(index: 10))
         // Less than 5 index

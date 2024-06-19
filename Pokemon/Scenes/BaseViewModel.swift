@@ -10,11 +10,13 @@ import Foundation
 class BaseViewModel {
     var isLoading: (() -> Void)?
 
-    let apiManager: PokemonApi
+    let appDependencies: AppDependencies
+    let apiManager: NetworkManager
     let favoriteManager: FavoriteManager
 
-    init() {
-        apiManager = PokemonApi.shared
-        favoriteManager = FavoriteManager.shared
+    init(appDependencies: AppDependencies) {
+        self.appDependencies = appDependencies
+        self.apiManager = appDependencies.apiManager
+        self.favoriteManager = appDependencies.favoriteManager
     }
 }

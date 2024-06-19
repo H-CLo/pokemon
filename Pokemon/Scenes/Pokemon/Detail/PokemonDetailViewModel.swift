@@ -20,8 +20,9 @@ class PokemonDetailViewModel: BaseViewModel {
     var flavorTextBlock = PassthroughSubject<String, Never>()
     var evolutionBlock = PassthroughSubject<[PokemonEvolutionChain.Species], Never>()
 
-    init(id: String) {
+    init(id: String, appDependencies: AppDependencies) {
         self.id = id
+        super.init(appDependencies: appDependencies)
     }
 
     func start() {

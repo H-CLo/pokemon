@@ -99,7 +99,7 @@ extension PokemonDetailEvolutionView {
 
 extension PokemonDetailEvolutionView {
     func fetchPokemonDetail(id: String, completion: @escaping (PokemonDetail?) -> Void) {
-        PokemonApi.shared.requestDetail(id: id) { result in
+        NetworkManager().requestDetail(id: id) { result in
             switch result {
             case let .success(model):
                 completion(model)
