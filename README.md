@@ -6,8 +6,10 @@
 |  ----  | ----  | ---- |
 | ![](https://github.com/H-CLo/pokemon/assets/13503418/20e5f9d7-6bb7-409d-9d0e-7f33ab1dc080) | ![](https://github.com/H-CLo/pokemon/assets/13503418/32359485-0d3b-4960-b79f-76f5fccdbc03) | ![](https://github.com/H-CLo/pokemon/assets/13503418/d0791eb8-06aa-4039-be12-38cf3e908ca2) |
 
-# Developmnet Environment
-- Xcode 15.4
+# Requirement
+- Xcode 15.x
+- Swift 5.x.x
+- iOS 13+
 # Features
 ## PokemonList
 - 基本資訊
