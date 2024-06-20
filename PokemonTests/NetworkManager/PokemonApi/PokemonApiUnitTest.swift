@@ -20,12 +20,15 @@ final class PokemonApiUnitTest: XCTestCase {
     }
 
     func test_pokemonList() {
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/pokemon", fileName: "pokemonList")
+
         let expec = XCTestExpectation(description: "test_pokemonList")
         networkManager.requestList(completion: { result in
             switch result {
             case let .success(model):
-                XCTAssert(model.count > 0)
-                XCTAssert(model.results.count > 0)
+                XCTAssert(model.count == 1310)
+                XCTAssertNil(model.previous)
+                XCTAssert(model.next == "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20")
             case let .failure(error):
                 XCTFail("Error = \(error.localizedDescription)")
             }
@@ -35,13 +38,15 @@ final class PokemonApiUnitTest: XCTestCase {
     }
 
     func test_pokemonList_offset_limit() {
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/pokemon", fileName: "pokemonList")
+
         let expec = XCTestExpectation(description: "test_pokemonList_offset_limit")
         networkManager.requestList(offset: 40, limit: 20, completion: { result in
             switch result {
             case let .success(model):
-                XCTAssert(model.count > 0)
-                XCTAssert(model.results.count > 0)
-                debugPrint("Models = \(model.results)")
+                XCTAssert(model.count == 1310)
+                XCTAssertNil(model.previous)
+                XCTAssert(model.next == "https://pokeapi.co/api/v2/pokemon?offset=20&limit=20")
             case let .failure(error):
                 XCTFail("Error = \(error.localizedDescription)")
             }
@@ -51,14 +56,14 @@ final class PokemonApiUnitTest: XCTestCase {
     }
 
     func test_pokemonDetail() {
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/pokemon/1", fileName: "pokemonDetail")
+
         let expec = XCTestExpectation(description: "test_pokemonDetail")
         networkManager.requestDetail(id: "1", completion: { result in
             switch result {
             case let .success(model):
-                XCTAssert(model.sprites.front_default.count > 0)
-                XCTAssert(model.species.name.count > 0)
-                XCTAssert(model.types.count > 0)
-                debugPrint("Models = \(model)")
+                XCTAssert(model.sprites.front_default == "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")
+                XCTAssert(model.species.name == "bulbasaur")
             case let .failure(error):
                 XCTFail("Error = \(error.localizedDescription)")
             }
@@ -68,14 +73,16 @@ final class PokemonApiUnitTest: XCTestCase {
     }
 
     func test_pokemonRequestSpecies() {
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/pokemon-species/1", fileName: "pokemonSpecies")
+
         let expec = XCTestExpectation(description: "test_pokemonRequestSpecies")
         networkManager.request(customURL: "https://pokeapi.co/api/v2/pokemon-species/1/",
                                completion: { (result: Result<PokemonSpecies, Error>) in
                                    switch result {
                                    case let .success(model):
-                                       XCTAssert(model.flavor_text_entries.count > 0)
-                                       XCTAssert(model.evolution_chain.url.count > 0)
-                                       expec.fulfill()
+                                       XCTAssert(model.flavor_text_entries.first?.language.name == "en")
+                                       XCTAssert(model.flavor_text_entries.first?.language.url == "https://pokeapi.co/api/v2/language/9/")
+                                       XCTAssert(model.evolution_chain.url == "https://pokeapi.co/api/v2/evolution-chain/1/")
                                    case let .failure(error):
                                        XCTFail("Error = \(error.localizedDescription)")
                                    }
@@ -85,14 +92,15 @@ final class PokemonApiUnitTest: XCTestCase {
     }
 
     func test_pokemonRequestEvolutionChain() {
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/evolution-chain/1", fileName: "pokemonEvolutionChain")
+
         let expec = XCTestExpectation(description: "test_pokemonRequestSpecies")
         networkManager.request(customURL: "https://pokeapi.co/api/v2/evolution-chain/1/",
                                completion: { (result: Result<PokemonEvolutionChain, Error>) in
                                    switch result {
                                    case let .success(model):
-                                       XCTAssert(model.chain.species.name.count > 0)
-                                       XCTAssert(model.chain.evolves_to.count > 0)
-                                       expec.fulfill()
+                                       XCTAssert(model.chain.species.name == "bulbasaur")
+                                       XCTAssert(model.chain.species.url == "https://pokeapi.co/api/v2/pokemon-species/1/")
                                    case let .failure(error):
                                        XCTFail("Error = \(error.localizedDescription)")
                                    }

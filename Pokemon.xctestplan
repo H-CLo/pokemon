@@ -9,7 +9,15 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
+    "codeCoverage" : {
+      "targets" : [
+        {
+          "containerPath" : "container:Pokemon.xcodeproj",
+          "identifier" : "078115452C1C322A00A606B7",
+          "name" : "Pokemon"
+        }
+      ]
+    },
     "targetForVariableExpansion" : {
       "containerPath" : "container:Pokemon.xcodeproj",
       "identifier" : "078115452C1C322A00A606B7",

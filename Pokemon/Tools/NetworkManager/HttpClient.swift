@@ -63,6 +63,12 @@ class HttpClient: HttpClientProtocol {
         let headers = HTTPHeaders(target.headers)
 
         debugPrint("URL = \(urlStr)")
+
+        let url = URL(string: urlStr)
+        debugPrint("Host = \(String(describing: url?.host()))")
+        debugPrint("Path = \(String(describing: url?.path()))")
+
+
         debugPrint("Method = \(method)")
         debugPrint("Headers = \(headers)")
 
