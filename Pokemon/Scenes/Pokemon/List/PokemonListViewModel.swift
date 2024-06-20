@@ -9,6 +9,7 @@ import Combine
 import Foundation
 
 class PokemonListViewModel: BaseViewModel {
+    private var subscriptions = Set<AnyCancellable>()
     var layoutType: PokemonListLayoutType = .grid
     private var pokemonList = PokemonList(count: 0, next: "", previous: "", results: [])
     private var pokemons = [Pokemon]()
@@ -31,6 +32,12 @@ class PokemonListViewModel: BaseViewModel {
     var pokemonsBlock = PassthroughSubject<[Pokemon], Never>()
     var pokemonDetailBlock = PassthroughSubject<(String, PokemonDetail), Never>()
     var showFavoriteBlock = PassthroughSubject<String, Never>()
+    var favoriteChanged = PassthroughSubject<IndexPath, Never>()
+
+    override init(appDependencies: AppDependencies) {
+        super.init(appDependencies: appDependencies)
+        bindAppDependencies()
+    }
 }
 
 // MARK: - TableView
@@ -145,6 +152,17 @@ extension PokemonListViewModel {
                 }
             }
         }
+    }
+}
+
+// MARK: - Binding AppDependencies
+
+extension PokemonListViewModel {
+    func bindAppDependencies() {
+        favoriteManager.favoriteChanged.sink { [weak self] id in
+            guard let index = self?.getPokemonIndex(byID: id) else { return }
+            self?.favoriteChanged.send(IndexPath(item: index, section: 0))
+        }.store(in: &subscriptions)
     }
 }
 

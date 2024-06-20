@@ -5,6 +5,7 @@
 //  Created by Lo on 2024/6/15.
 //
 
+import Combine
 import Foundation
 
 /// Favorite service
@@ -15,6 +16,8 @@ class FavoriteManager {
     private let userDefault = UserDefaults.standard
     private var favorites: Set<Pokemon> = []
 
+    var favoriteChanged: PassthroughSubject<String, Never> = .init()
+
     /// initialize and load persistent favorite datas
     init() {
         favorites = load()
@@ -24,6 +27,7 @@ class FavoriteManager {
     /// - Parameter item: pokemon
     func addFavorite(_ item: Pokemon) {
         favorites.insert(item)
+        favoriteChanged.send(item.id)
         // Sync persistent
         save()
     }
@@ -40,6 +44,7 @@ class FavoriteManager {
     /// - Parameter item: pokemon
     func removeFavorite(_ item: Pokemon) {
         favorites.remove(item)
+        favoriteChanged.send(item.id)
         // Sync persistent
         save()
     }

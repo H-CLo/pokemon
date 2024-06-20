@@ -102,14 +102,18 @@ private extension PokemonListViewController {
             (cell as? PokemonBaseCollectionViewCell)?.configCell(detail: detail)
         }.store(in: &subscriptions)
 
-        viewModel.showFavoriteBlock.sink {[weak self] _ in
+        viewModel.showFavoriteBlock.sink { [weak self] _ in
             self?.collectionView.reloadData()
+        }.store(in: &subscriptions)
+
+        viewModel.favoriteChanged.sink { [weak self] indexPath in
+            self?.collectionView.reloadItems(at: [indexPath])
         }.store(in: &subscriptions)
     }
 
     func startInteractiveTransition(_ type: PokemonListLayoutType) {
         let layout = (type == .grid) ? gridLayout : listLayout
-        collectionView.reloadItems(at: self.collectionView.indexPathsForVisibleItems)
+        collectionView.reloadItems(at: collectionView.indexPathsForVisibleItems)
         collectionView.setCollectionViewLayout(layout, animated: true)
     }
 }
@@ -153,12 +157,12 @@ extension PokemonListViewController: UICollectionViewDataSource {
 
 extension PokemonListViewController: UICollectionViewDelegate {
     // Using willDisplay to detect load more mechanism
-    func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, willDisplay _: UICollectionViewCell, forItemAt indexPath: IndexPath) {
         guard viewModel.canLoadMore(index: indexPath.row) else { return }
         viewModel.fetchMorePokemonList()
     }
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    func collectionView(_: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let pokemon = viewModel.getSequencePokemon(indexPath.row)
         delegate?.pushToDetailView(id: pokemon?.id ?? "")
     }
@@ -167,7 +171,6 @@ extension PokemonListViewController: UICollectionViewDelegate {
 // MARK: - PokemonBaseCollectionViewCellDelegate
 
 extension PokemonListViewController: PokemonBaseCollectionViewCellDelegate {
-
     func favoriteTapped(id: String) {
         viewModel.favoriteTapped(id: id)
     }
