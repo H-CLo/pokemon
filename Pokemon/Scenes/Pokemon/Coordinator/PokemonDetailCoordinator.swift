@@ -20,7 +20,7 @@ class PokemonDetailCoordinator: Coordinator {
         let viewModel = PokemonDetailViewModel(id: id, appDependencies: appDependencies)
         let pokemonDetailViewController = PokemonDetailViewController(viewModel: viewModel)
         pokemonDetailViewController.delegate = self
-        navigationController.pushViewController(pokemonDetailViewController, animated: true)
+        navigationController.pushViewController(pokemonDetailViewController, animated: false)
     }
 }
 
