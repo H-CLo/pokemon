@@ -14,9 +14,9 @@ class FavoriteButton: UIButton {
 
     // MARK: - Binding
 
-    var pokemonPressed: ((_ id: String) -> Void)?
+    private var pokemonPressed: ((_ id: String) -> Void)?
 
-    var isFavorite: Bool = false {
+    private var isFavorite: Bool = false {
         didSet {
             let imageName = isFavorite ? "like" : "unlike"
             setImage(UIImage(named: imageName), for: .normal)
@@ -51,5 +51,16 @@ class FavoriteButton: UIButton {
         guard let id = id else { return }
         pokemonPressed?(id)
         isFavorite = !isFavorite
+    }
+}
+
+extension FavoriteButton {
+
+    func unitTest_getID() -> String? {
+        return id
+    }
+
+    func unitTest_getIsFavorite() -> Bool {
+        return isFavorite
     }
 }

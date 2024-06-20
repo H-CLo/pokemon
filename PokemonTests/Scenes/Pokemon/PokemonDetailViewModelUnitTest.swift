@@ -19,6 +19,49 @@ final class PokemonDetailViewModelUnitTest: XCTestCase {
         subscriptions.removeAll()
     }
 
+    // MARK: - Api
+
+    func test_fetchPokemonDetail() {
+        let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/pokemon/1", fileName: "pokemonDetail")
+
+        let expec = XCTestExpectation(description: "test_fetchPokemonDetail")
+        viewModel.fetchPokemonDetail(id: "1") { model in
+            XCTAssertNotNil(model)
+            XCTAssert(model?.sprites.front_default == "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png")
+            XCTAssert(model?.species.name == "bulbasaur")
+            expec.fulfill()
+        }
+        wait(for: [expec], timeout: 5)
+    }
+
+    func test_requestSpecies() {
+        let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/pokemon-species/1", fileName: "pokemonSpecies")
+
+        let expec = XCTestExpectation(description: "test_requestSpecies")
+        viewModel.requestSpecies(urlStr: "https://pokeapi.co/api/v2/pokemon-species/1/") { model in
+            XCTAssert(model?.flavor_text_entries.first?.language.name == "en")
+            XCTAssert(model?.flavor_text_entries.first?.language.url == "https://pokeapi.co/api/v2/language/9/")
+            XCTAssert(model?.evolution_chain.url == "https://pokeapi.co/api/v2/evolution-chain/1/")
+            expec.fulfill()
+        }
+        wait(for: [expec], timeout: 5)
+    }
+
+    func test_requestEvolutionChain() {
+        let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
+        HTTPStubsLoader.stubResponse(host: "pokeapi.co", path: "/api/v2/evolution-chain/1", fileName: "pokemonEvolutionChain")
+
+        let expec = XCTestExpectation(description: "test_requestEvolutionChain")
+        viewModel.requestEvolutionChain(urlStr: "https://pokeapi.co/api/v2/evolution-chain/1/") { model in
+            XCTAssert(model?.chain.species.name == "bulbasaur")
+            XCTAssert(model?.chain.species.url == "https://pokeapi.co/api/v2/pokemon-species/1/")
+            expec.fulfill()
+        }
+        wait(for: [expec], timeout: 5)
+    }
+
     func test_sendFlavorText() {
         let viewModel = PokemonDetailViewModel(id: "1", appDependencies: AppDependencies())
         let species = PokemonSpecies(evolution_chain: PokemonSpeciesEvolutionChain(url: ""),

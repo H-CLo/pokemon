@@ -33,7 +33,7 @@ class PokemonDetailViewModel: BaseViewModel {
 // MARK: - Api
 
 extension PokemonDetailViewModel {
-    func fetchPokemonDetail(id: String) {
+    func fetchPokemonDetail(id: String, completion: ((_ model: PokemonDetail?) -> Void)? = nil) {
         apiManager.requestDetail(id: id) { [weak self] result in
             guard let self = self else { return }
             switch result {
@@ -41,34 +41,36 @@ extension PokemonDetailViewModel {
                 self.pokemonDetail = model
                 self.pokemonDetailBlock.send(model)
                 self.requestSpecies(urlStr: model.species.url)
+                completion?(model)
             case .failure:
-                break
+                completion?(nil)
             }
         }
     }
 
-    func requestSpecies(urlStr: String) {
+    func requestSpecies(urlStr: String, completion: ((_ model: PokemonSpecies?) -> Void)? = nil) {
         apiManager.request(customURL: urlStr) { [weak self] (result: Result<PokemonSpecies, Error>) in
             guard let self = self else { return }
             switch result {
             case let .success(model):
                 self.sendFlavorText(from: model)
                 self.requestEvolutionChain(urlStr: model.evolution_chain.url)
+                completion?(model)
             case .failure:
-                break
+                completion?(nil)
             }
         }
     }
 
-    func requestEvolutionChain(urlStr: String) {
+    func requestEvolutionChain(urlStr: String, completion: ((_ model: PokemonEvolutionChain?) -> Void)? = nil) {
         apiManager.request(customURL: urlStr) { [weak self] (result: Result<PokemonEvolutionChain, Error>) in
             guard let self = self else { return }
             switch result {
             case let .success(model):
-                debugPrint("Result = \(model)")
                 sendEvolutions(from: model)
+                completion?(model)
             case .failure:
-                break
+                completion?(nil)
             }
         }
     }
