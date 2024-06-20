@@ -126,11 +126,14 @@ extension PokemonListViewController: UICollectionViewDataSource {
         let detail = viewModel.getSequencePokemonDetail(indexPath.row)
         let cell = getCell(collectionView: collectionView, indexPath: indexPath)
         if let pokemon = pokemon {
+            let hasFavorite = viewModel.hasFavorite(id: pokemon.id)
             cell.configCell(item: pokemon)
+            cell.configCell(id: pokemon.id, isFavorite: hasFavorite)
         }
         if let detail = detail {
             cell.configCell(detail: detail)
         }
+        cell.delegate = self
         return cell
     }
 
@@ -158,5 +161,14 @@ extension PokemonListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let pokemon = viewModel.getSequencePokemon(indexPath.row)
         delegate?.pushToDetailView(id: pokemon?.id ?? "")
+    }
+}
+
+// MARK: - PokemonBaseCollectionViewCellDelegate
+
+extension PokemonListViewController: PokemonBaseCollectionViewCellDelegate {
+
+    func favoriteTapped(id: String) {
+        viewModel.favoriteTapped(id: id)
     }
 }

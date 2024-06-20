@@ -8,8 +8,13 @@
 import UIKit
 
 class FavoriteButton: UIButton {
-    private let favoriteManager: FavoriteManager
-    private var favoriteItem: Pokemon?
+    // MARK: - Property
+
+    private var id: String?
+
+    // MARK: - Binding
+
+    var pokemonPressed: ((_ id: String) -> Void)?
 
     var isFavorite: Bool = false {
         didSet {
@@ -18,8 +23,7 @@ class FavoriteButton: UIButton {
         }
     }
 
-    init(favoriteManager: FavoriteManager = FavoriteManager()) {
-        self.favoriteManager = favoriteManager
+    init() {
         super.init(frame: .zero)
         setImage(UIImage(named: "unlike"), for: .normal)
         addTarget(self, action: #selector(favoriteDidPressed), for: .touchUpInside)
@@ -30,20 +34,22 @@ class FavoriteButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc
-    func favoriteDidPressed() {
-        guard let item = favoriteItem else { return }
-        if favoriteManager.hasFavorite(item) {
-            favoriteManager.removeFavorite(item)
-            isFavorite = false
-        } else {
-            favoriteManager.addFavorite(item)
-            isFavorite = true
-        }
+    func setID(pokemonID: String) {
+        id = pokemonID
     }
 
-    func setFavoriteItem(pokemon: Pokemon) {
-        favoriteItem = pokemon
-        isFavorite = favoriteManager.hasFavorite(pokemon)
+    func setHasFavorite(_ isFavorite: Bool) {
+        self.isFavorite = isFavorite
+    }
+
+    func setBinding(_ block: @escaping (_ id: String) -> Void) {
+        pokemonPressed = block
+    }
+
+    @objc
+    func favoriteDidPressed() {
+        guard let id = id else { return }
+        pokemonPressed?(id)
+        isFavorite = !isFavorite
     }
 }

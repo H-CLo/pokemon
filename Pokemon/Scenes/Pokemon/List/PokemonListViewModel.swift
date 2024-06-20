@@ -51,6 +51,10 @@ extension PokemonListViewModel {
     func getPokemonIndex(byID id: String) -> Int? {
         return displayPokemons.firstIndex { $0.id == id }
     }
+
+    func getPokemon(byID id: String) -> Pokemon? {
+        return displayPokemons.first { $0.id == id }
+    }
 }
 
 // MARK: - Grid List
@@ -76,6 +80,17 @@ extension PokemonListViewModel {
         favoritePokemons = Array(favoriteManager.fetchFavorites())
         favoritePokemons.sort { Int($0.id) ?? 0 < Int($1.id) ?? 0 }
         showFavoriteBlock.send("")
+    }
+
+    func hasFavorite(id: String) -> Bool {
+        guard let pokemon = getPokemon(byID: id) else { return false }
+        return favoriteManager.hasFavorite(pokemon)
+    }
+
+    func favoriteTapped(id: String) {
+        guard let pokemon = getPokemon(byID: id) else { return }
+        let hasFavorite = favoriteManager.hasFavorite(pokemon)
+        hasFavorite ? favoriteManager.removeFavorite(pokemon) : favoriteManager.addFavorite(pokemon)
     }
 }
 
@@ -136,7 +151,6 @@ extension PokemonListViewModel {
 // MARK: - UnitTest
 
 extension PokemonListViewModel {
-
     func unitTest_setPokemons(_ pokemons: [Pokemon]) {
         self.pokemons = pokemons
     }

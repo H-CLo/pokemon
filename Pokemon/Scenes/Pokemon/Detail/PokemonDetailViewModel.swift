@@ -99,3 +99,19 @@ extension PokemonDetailViewModel {
         return result
     }
 }
+
+// MARK: - Favorite
+
+extension PokemonDetailViewModel {
+    func getFavoriteInfo(model: PokemonDetail) -> (Pokemon, Bool) {
+        let target = Target.pokemonDetail(id: model.id.description)
+        let pokemon = Pokemon(name: model.name, url: target.baseURL + target.path + "/")
+        return (pokemon, favoriteManager.hasFavorite(pokemon))
+    }
+
+    func favoriteTapped() {
+        guard let detail = pokemonDetail else { return }
+        let favoriteInfo = getFavoriteInfo(model: detail)
+        favoriteInfo.1 ? favoriteManager.removeFavorite(favoriteInfo.0) : favoriteManager.addFavorite(favoriteInfo.0)
+    }
+}

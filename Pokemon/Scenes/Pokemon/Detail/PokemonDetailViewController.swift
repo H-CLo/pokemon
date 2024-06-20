@@ -91,9 +91,12 @@ extension PokemonDetailViewController {
     }
 
     func setupFavoriteItem(model: PokemonDetail) {
-        let target = Target.pokemonDetail(id: model.id.description)
-        let pokemon = Pokemon(name: model.name, url: target.baseURL+target.path+"/")
-        favoriteButton.setFavoriteItem(pokemon: pokemon)
+        let favoriteInfo = viewModel.getFavoriteInfo(model: model)
+        favoriteButton.setID(pokemonID: model.id.description)
+        favoriteButton.setHasFavorite(favoriteInfo.1)
+        favoriteButton.setBinding { [weak self] _ in
+            self?.viewModel.favoriteTapped()
+        }
     }
 }
 
