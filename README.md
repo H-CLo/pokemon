@@ -60,3 +60,5 @@
 - SnapKit 介面 Code layout
 - SDWebImage 圖像套件
 - OHHTTPStubs 網路請求Stub工具
+# Document
+- Pokemon Api V2: https://pokeapi.co/docs/v2#pokemon-section
